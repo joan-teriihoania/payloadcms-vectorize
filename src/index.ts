@@ -8,6 +8,7 @@ import type {
   KnowledgePoolDynamicConfig,
   VectorizedPayload,
   VectorSearchQuery,
+  VectorSearchEmbeddingQuery,
   BulkEmbedResult,
   RetryFailedBatchResult,
   DbAdapter,
@@ -76,6 +77,7 @@ export type {
 
   // For adapters
   VectorSearchResult,
+  VectorSearchEmbeddingQuery,
 } from './types.js'
 
 export { getVectorizedPayload } from './types.js'
@@ -352,6 +354,14 @@ export default (pluginOptions: PayloadcmsVectorizeConfig) =>
           vectorSearchHandlers.vectorSearch(
             payload,
             params.query,
+            params.knowledgePool,
+            params.limit,
+            params.where,
+          ),
+        searchByEmbedding: (params: VectorSearchEmbeddingQuery) =>
+          vectorSearchHandlers.searchByEmbedding(
+            payload,
+            params.embedding,
             params.knowledgePool,
             params.limit,
             params.where,

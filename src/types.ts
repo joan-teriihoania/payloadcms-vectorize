@@ -57,6 +57,7 @@ export type VectorizedPayload = {
   _isBulkEmbedEnabled: (knowledgePool: KnowledgePoolName) => boolean
   getDbAdapterCustom: () => Record<string, any> | undefined
   search: (params: VectorSearchQuery) => Promise<Array<VectorSearchResult>>
+  searchByEmbedding: (params: VectorSearchEmbeddingQuery) => Promise<Array<VectorSearchResult>>
   queueEmbed: (
     params:
       | {
@@ -327,6 +328,17 @@ export interface VectorSearchQuery {
   knowledgePool: KnowledgePoolName
   /** The search query string */
   query: string
+  /** Optional Payload where clause to filter results. Can rely on embeddings collection fields or extension fields. */
+  where?: Where
+  /** Optional limit for number of results (default: 10) */
+  limit?: number
+}
+
+export interface VectorSearchEmbeddingQuery {
+  /** The knowledge pool to search in */
+  knowledgePool: KnowledgePoolName
+  /** The embedding vector to search with */
+  embedding: number[]
   /** Optional Payload where clause to filter results. Can rely on embeddings collection fields or extension fields. */
   where?: Where
   /** Optional limit for number of results (default: 10) */
