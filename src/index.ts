@@ -78,6 +78,7 @@ export type {
   // For adapters
   VectorSearchResult,
   VectorSearchEmbeddingQuery,
+  EmbeddingRecord,
 } from './types.js'
 
 export { getVectorizedPayload } from './types.js'
@@ -366,6 +367,19 @@ export default (pluginOptions: PayloadcmsVectorizeConfig) =>
             params.limit,
             params.where,
           ),
+        findByIds: (params: {
+          knowledgePool: KnowledgePoolName
+          ids: string[]
+          populateEmbedding?: boolean
+        }) => {
+          if (params.ids.length === 0) return Promise.resolve({})
+          return pluginOptions.dbAdapter.findByIds(
+            payload,
+            params.knowledgePool,
+            params.ids,
+            params.populateEmbedding ?? false,
+          )
+        },
         queueEmbed: async (
           params:
             | {

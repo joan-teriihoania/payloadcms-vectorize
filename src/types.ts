@@ -58,6 +58,11 @@ export type VectorizedPayload = {
   getDbAdapterCustom: () => Record<string, any> | undefined
   search: (params: VectorSearchQuery) => Promise<Array<VectorSearchResult>>
   searchByEmbedding: (params: VectorSearchEmbeddingQuery) => Promise<Array<VectorSearchResult>>
+  findByIds: (params: {
+    knowledgePool: KnowledgePoolName
+    ids: string[]
+    populateEmbedding?: boolean
+  }) => Promise<Record<string, EmbeddingRecord | undefined>>
   queueEmbed: (
     params:
       | {
@@ -323,6 +328,17 @@ export interface VectorSearchResult {
   [key: string]: any // Extension fields and other dynamic fields
 }
 
+export interface EmbeddingRecord {
+  id: string
+  sourceCollection: string
+  docId: string
+  chunkIndex: number
+  chunkText: string
+  embeddingVersion: string
+  embedding?: number[]
+  [key: string]: any
+}
+
 export interface VectorSearchQuery {
   /** The knowledge pool to search in */
   knowledgePool: KnowledgePoolName
@@ -442,4 +458,10 @@ export type DbAdapter = {
     limit?: number,
     where?: Where,
   ) => Promise<Array<VectorSearchResult>>
+  findByIds: (
+    payload: BasePayload,
+    poolName: KnowledgePoolName,
+    ids: string[],
+    populateEmbedding?: boolean,
+  ) => Promise<Record<string, EmbeddingRecord | undefined>>
 }
